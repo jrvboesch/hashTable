@@ -1,39 +1,57 @@
-k = 4
-hashTable = dict()
-bucket = []
+hashTable = []
+m = 100
+
 
 def init():
-    for i in range(k):
-        bucket[i] = None
+    for i in range(m):
+        hashTable.append(dict())
 
 
-def get(key):
-    return hashTable[h(key)]
+def search(key):
+    hkey = h(key)
+    bucket = hashTable[hkey]
+    if key in bucket:
+        return bucket[key]
+    else:
+        return -1
 
 
 def delete(key):
     hkey = h(key)
-    if hashTable[hkey] is not None:
-        del hashTable[hkey]
-        return 'valor borrado de llave ' + hkey
+    bucket = hashTable[hkey]
+    if key in bucket:
+        del bucket[key]
+        return True
     else:
-        return 'La llave ' + hkey + ' no tiene valor que borrar'
+        return False
 
 
 def insert(key, value):
-    for i in range(k):
-        j = h(key, i)
-        if hashTable[j] is not None:
-            hashTable[j] = value
-            return key
-
-
-def h(key):
-    a = 3
-    if len(arg) > 1:
-        return (a*key % len(hashTable)) % k
-    else:
+    for i in range(m):
+        j = h(key)
+        hashTable[j][key] = value
         return key
 
 
-print(h(5, 2))
+def h(key):
+    a = 1233
+    b = 153
+    c = key
+    if type(c) == type('str'):
+        c = stringToAsccii(c)
+    return round((a * c + b) % m, 0)
+
+
+def stringToAsccii(s):
+    sum = 0
+    for i in [ord(c) for c in s]:
+        sum += i
+    return sum
+
+init()
+insert('hi', 12)
+insert('his', 15)
+
+print(search('hi'))
+print(delete('hi'))
+print(search('hi'))
